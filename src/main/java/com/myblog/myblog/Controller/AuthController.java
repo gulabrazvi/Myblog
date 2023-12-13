@@ -1,6 +1,8 @@
 package com.myblog.myblog.Controller;
 
+import com.myblog.myblog.Entity.Role;
 import com.myblog.myblog.Entity.User;
+import com.myblog.myblog.Repository.RoleRepository;
 import com.myblog.myblog.Repository.UserRepository;
 import com.myblog.myblog.Security.JwtTokenProvider;
 import com.myblog.myblog.payload.JWTAuthResponse;
@@ -19,6 +21,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashSet;
+import java.util.Set;
+
 
 @RestController
 @RequestMapping("/api/auth")
@@ -32,8 +37,12 @@ public class AuthController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     @Autowired
     private JwtTokenProvider tokenProvider;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
   //  http://localhost:8080/api/auth/signup
 
@@ -53,6 +62,12 @@ public class AuthController {
         user.setEmail(signUpDto.getEmail());
         user.setUsername(signUpDto.getUsername());
         user.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
+
+        // By default for all sigup it create ADMIN Role
+        Role roles = roleRepository.findByName("Role_ADMIN").get();
+        Set<Role> role = new HashSet<>();
+        role.add(roles);
+        user.setRoles(role);
 
         userRepository.save(user);
 

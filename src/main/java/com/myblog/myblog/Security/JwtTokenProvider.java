@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 
+
 @Component
 public class JwtTokenProvider {
     @Value("${app.jwt-secret}")
@@ -57,6 +58,8 @@ public class JwtTokenProvider {
             throw new BlogAPIException(HttpStatus.BAD_REQUEST, "JWT claims string is empty.");
         }
     }
+
+
 }
 
 
